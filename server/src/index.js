@@ -69,9 +69,17 @@ export function createApp() {
   return app;
 }
 
-if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) {
+async function autoSeedIfEmpty() {
   const count = db.prepare('SELECT COUNT(*) n FROM products').get().n;
-  if (count === 0) console.log('⚠  No products yet — run `npm run seed` to load the demo catalog.');
+  if (count === 0) {
+    console.log('🌱 No products found — auto-seeding demo catalog...');
+    await import('./seed.js');
+    console.log('✅ Auto-seed complete.');
+  }
+}
+
+if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) {
   if (!config.jwtFromEnv) console.log('ℹ  JWT_SECRET not set: logins reset on every restart. Set it in server/.env');
+  await autoSeedIfEmpty();
   createApp().listen(config.port, () => console.log(`Dream Palace API on http://localhost:${config.port}`));
 }

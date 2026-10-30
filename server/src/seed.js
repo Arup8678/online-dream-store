@@ -8,13 +8,14 @@ import { recalcRating } from './lib/products.js';
 import { ensureAdmin } from './bootstrap.js';
 
 const force = process.argv.includes('--force');
-if (db.prepare('SELECT COUNT(*) n FROM products').get().n > 0 && !force) {
+const hasProducts = db.prepare('SELECT COUNT(*) n FROM products').get().n > 0;
+if (hasProducts && !force) {
   console.log('Catalog already has products. Use `npm run seed -- --force` to wipe catalog/orders and reseed.');
-  process.exit(0);
-}
-if (force) {
-  db.exec('DELETE FROM reviews; DELETE FROM order_events; DELETE FROM order_items; DELETE FROM orders; DELETE FROM products; DELETE FROM categories; DELETE FROM offers;');
-}
+  if (process.argv[1]?.endsWith('seed.js')) process.exit(0);
+} else {
+  if (force) {
+    db.exec('DELETE FROM reviews; DELETE FROM order_events; DELETE FROM order_items; DELETE FROM orders; DELETE FROM products; DELETE FROM categories; DELETE FROM offers;');
+  }
 
 // ---------- categories ----------
 const TREE = [
@@ -188,3 +189,4 @@ if (!db.prepare("SELECT 1 FROM users WHERE email = 'demo@dreamplace.local'").get
 }
 console.log(`Seeded ${db.prepare('SELECT COUNT(*) n FROM products').get().n} products, ${db.prepare('SELECT COUNT(*) n FROM categories').get().n} categories.`);
 console.log(`Admin: ${config.adminEmail} / ${config.adminPassword}   ·   Demo customer: demo@dreamplace.local / demo1234`);
+} // close if (!hasProducts || force)
