@@ -1,14 +1,25 @@
 import 'dotenv/config';
 import path from 'node:path';
+import fs from 'node:fs';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
+// Resolve DB path: use env var if set AND that directory is writable; otherwise fall back to project-local path.
+function resolveDbFile() {
+  const envPath = process.env.DB_FILE;
+  if (envPath) {
+    const dir = path.dirname(envPath);
+    try { fs.mkdirSync(dir, { recursive: true }); return envPath; } catch { /* fall through */ }
+  }
+  return path.join(root, 'data', 'dreamplace.db');
+}
+
 export const config = {
   root,
   port: Number(process.env.PORT || 4000),
-  dbFile: process.env.DB_FILE || path.join(root, 'data', 'dreamplace.db'),
+  dbFile: resolveDbFile(),
   uploadDir: process.env.UPLOAD_DIR || path.join(root, 'uploads'),
   publicDir: path.join(root, 'public'),
   // Secret used to sign login cookies. Set JWT_SECRET in .env for production.
