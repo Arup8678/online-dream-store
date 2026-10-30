@@ -1,0 +1,38 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+@theme {
+  --font-display: "Sora", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --color-ink: #0a0a14;
+  --color-panel: #12121f;
+  --color-panel2: #181829;
+  --color-line: rgb(255 255 255 / 0.09);
+  --color-neon: #8b7bff;
+  --color-cyan: #22d3ee;
+  --color-muted: #9a97b8;
+}
+body { margin: 0; background: var(--color-ink); color: #f1f0ff; font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.01em; }
+:focus-visible { outline: 2px solid var(--color-cyan); outline-offset: 2px; border-radius: 6px; }
+
+@layer components {
+  .card { background: var(--color-panel); border: 1px solid var(--color-line); border-radius: 18px; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: .45rem; min-height: 40px; padding: .5rem 1rem; border-radius: 10px; font-weight: 600; font-size: .875rem; border: 1px solid transparent; cursor: pointer; transition: .15s; white-space: nowrap; }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
+  .btn-primary { background: linear-gradient(135deg, #8b7bff, #5b8cff); color: #fff; }
+  .btn-primary:hover:not(:disabled) { filter: brightness(1.1); }
+  .btn-ghost { background: rgb(255 255 255 / .06); border-color: var(--color-line); }
+  .btn-ghost:hover:not(:disabled) { background: rgb(255 255 255 / .12); }
+  .btn-danger { background: rgb(244 63 94 / .14); border-color: rgb(244 63 94 / .4); color: #fda4af; }
+  .btn-sm { min-height: 32px; padding: .25rem .7rem; font-size: .8rem; }
+  .input { width: 100%; min-height: 40px; padding: .5rem .75rem; border-radius: 10px; background: rgb(255 255 255 / .05); border: 1px solid var(--color-line); color: #fff; font-size: 14px; }
+  .input:focus { outline: none; border-color: var(--color-neon); box-shadow: 0 0 0 3px rgb(139 123 255 / .22); }
+  select.input option { background: #12121f; }
+  .label { display: block; font-size: .75rem; font-weight: 600; color: var(--color-muted); margin-bottom: .3rem; }
+  .th { text-align: left; font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--color-muted); font-weight: 600; padding: .6rem .9rem; white-space: nowrap; }
+  .td { padding: .65rem .9rem; border-top: 1px solid var(--color-line); font-size: .875rem; vertical-align: middle; }
+  .badge { display: inline-flex; padding: .15rem .55rem; border-radius: 999px; font-size: .7rem; font-weight: 700; }
+}
+.leaflet-container { background: #12121f; border-radius: 12px; }
+.pin { font-size: 28px; line-height: 1; filter: drop-shadow(0 4px 6px rgb(0 0 0 / .6)); }
